@@ -1,0 +1,25 @@
+{
+  "name": "mean-stack-blog",
+  "version": "1.0.0",
+  "description": "MEAN stack blog with Angular 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-paniagua/mean-stack-blog.git"
+  },
+  "author": "Manuel Paniagua",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m-paniagua/mean-stack-blog/issues"
+  },
+  "homepage": "https://github.com/m-paniagua/mean-stack-blog#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.6"
+  }
+}
