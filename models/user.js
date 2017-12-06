@@ -17,7 +17,7 @@ let emailLength = (email) => {
 }
 
 // check valid email address
-let valideEmail = (email) => {
+let validEmail = (email) => {
     if (!email) {
         return false;
     } else {
@@ -32,7 +32,7 @@ var emailValidators = [
         message: 'E-mail must be at least 5 characters but no more than 30'
     },
     {
-        validator: valideEmail,
+        validator: validEmail,
         message: 'Invalid e-mail'
     }
 ]
