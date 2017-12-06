@@ -6,7 +6,7 @@ dotenv.config();
 var url = process.env.MONGOLAB_URI;
 
 module.exports = {
-    uri: url + '/' + this.db,
+    uri: url + '/mean-blog',
     secret: crypto,
     db: 'mean-blog'
 }
