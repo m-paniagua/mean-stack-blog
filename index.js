@@ -6,6 +6,7 @@ var config = require('./config/database');
 var path = require('path');
 var authentication = require('./routes/authentication')(router);
 var bodyParser = require('body-parser');
+var cors = require('cors');
 
 // database connection
 mongoose.Promise = global.Promise;
@@ -17,6 +18,11 @@ mongoose.connect(config.uri, (err) => {
         console.log('Connected to database: ' + config.db);
     }
 });
+
+// allow cross orign request between dev and prod servers
+app.use(cors({
+    origin: 'http://localhost:4200',
+}))
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
