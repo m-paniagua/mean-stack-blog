@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 const appRoutes: Routes = [
   
@@ -11,6 +12,7 @@ const appRoutes: Routes = [
   { path: 'dashboard', component: DashboardComponent },         // dashboard route
   { path: 'register', component: RegisterComponent },           // register route
   { path: 'login', component: LoginComponent },                 // login route
+  { path: 'profile', component: ProfileComponent },             // login route  
   { path: '**', component: HomeComponent }                      // redirect to home
 ];
 

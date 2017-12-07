@@ -7,8 +7,24 @@ export class AuthService {
   domain: string = 'http://localhost:8080';   // development domain
   authToken: string;
   user: string;
+  options: RequestOptions;
 
   constructor(private http: Http) { }
+
+  createAuthenticationHeaders() {
+    this.loadToken();
+    this.options = new RequestOptions({
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'authorization': this.authToken
+      })
+    })
+  }
+
+  loadToken() {
+    var token = localStorage.getItem('token');
+    this.authToken = token;
+  }
 
   // save user to database
   registerUser(user) {
@@ -34,5 +50,10 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
     this.authToken = token;
     this.user = user;
+  }
+
+  getProfile() {
+    this.createAuthenticationHeaders();
+    return this.http.get(this.domain + '/authentication/profile', this.options).map(res => res.json());
   }
 }

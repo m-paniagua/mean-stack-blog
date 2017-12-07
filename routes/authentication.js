@@ -109,7 +109,6 @@ module.exports = (router) => {
                                 res.json({success: false, message: 'Password does not match'});
                             } else {
                                 var token = jwt.sign({userId: user._id}, config.secret, { expiresIn: '24h' });
-
                                 res.json({ success: true, message: 'Success!', token: token, user: { username: user.username } });
                             }
                         }
@@ -117,6 +116,39 @@ module.exports = (router) => {
                 });
             }
         }
+    })
+
+    // 
+    // any routes requiring authorization go below
+    // 
+    router.use((req, res, next) => {
+        var token = req.headers['authorization'];
+        if (!token) {
+            res.json({success: false, message: 'No token provided'});
+        } else {
+            jwt.verify(token, config.secret, (err, decoded) => {
+                if (err) {
+                    res.json({success: false, message: 'Token invalid: ' + err});
+                } else {
+                    req.decoded = decoded;
+                    next();
+                }
+            })
+        }
+    });
+
+    router.get('/profile', (req, res) => {
+        User.findOne({ _id: req.decoded.userId }).select('username email').exec((err, user) => {
+            if(err) {
+                res.json({success: false, message: err});
+            } else {
+                if(!user) {
+                    res.json({success: false, message: 'User not found'});
+                } else {
+                    res.json({success: true, user: user});
+                }
+            }
+        })
     })
     return router;
 }
