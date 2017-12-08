@@ -7,9 +7,9 @@ import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { AuthGuard } from './guard/auth.guard';
 import { NotAuthGuard } from './guard/notAuth.guard';
+import { BlogComponent } from './components/blog/blog.component';
 
 const appRoutes: Routes = [
-  
   { 
     path: '', 
     component: HomeComponent, 
@@ -34,7 +34,11 @@ const appRoutes: Routes = [
     path: 'profile', 
     component: ProfileComponent,
     canActivate: [AuthGuard]     
-  },             // login route  
+  },             // profile route  
+  { 
+    path: 'blog', 
+    component: BlogComponent  
+  },             // blog route 
   { 
     path: '**', 
     component: HomeComponent 
