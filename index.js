@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var config = require('./config/database');
 var path = require('path');
 var authentication = require('./routes/authentication')(router);
+var blogs = require('./routes/blog')(router);
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
@@ -34,6 +35,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/client/dist/'));
 
 app.use('/authentication', authentication);
+app.use('/blogs', blogs);
 
 // redirect to angular index file
 app.get('*', (req, res) => {

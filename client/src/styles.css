@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+.has-success .form-control,
+.has-success .form-control:focus {
+  border: 2px solid #18bc9c;
+}
+
+.has-error .form-control,
+.has-error .form-control:focus {
+  border: 2px solid #e74c3c;
+}
