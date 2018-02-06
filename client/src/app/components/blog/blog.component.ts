@@ -14,12 +14,16 @@ export class BlogComponent implements OnInit {
   newPost: boolean = false;
   loadingBlogs: boolean = false;
   form: FormGroup;
+  commentForm;
   processing: boolean = false;
   username: string;
   blogPosts: Array<object>;
+  newComment = [];
+  enabledComments = [];
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private blogService: BlogService) { 
-    this.createNewBlogForm()
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private blogService: BlogService) {
+    this.createNewBlogForm();
+    this.createCommentForm();
   }
 
   createNewBlogForm() {
@@ -38,19 +42,37 @@ export class BlogComponent implements OnInit {
     })
   }
 
+  createCommentForm() {
+    this.commentForm = this.formBuilder.group({
+      comment: ['', Validators.compose([
+        Validators.required,
+        Validators.maxLength(200),
+        Validators.minLength(1)
+      ])]
+    });
+  }
+
+  enableCommentForm() {
+    this.commentForm.get('comment').enable();
+  }
+
+  disableCommentForm() {
+    this.commentForm.get('comment').disable();
+  }
+
   enableNewBlogForm() {
     this.form.get('title').enable();
-    this.form.get('body').enable();    
+    this.form.get('body').enable();
   }
 
   disableNewBlogForm() {
     this.form.get('title').disable();
-    this.form.get('body').disable();  
+    this.form.get('body').disable();
   }
 
   alphaNumericValidation(controls) {
     var regExp = new RegExp(/^[a-zA-Z0-9 ]+$/);
-    if(regExp.test(controls.value)) {
+    if (regExp.test(controls.value)) {
       return null
     } else {
       return { 'alphaNumericValidation': true };
@@ -69,14 +91,24 @@ export class BlogComponent implements OnInit {
     }, 4000)
   }
 
-  draftComment() {
-    
+  draftComment(id) {
+    this.commentForm.reset();
+    this.newComment = [];
+    this.newComment.push(id);
+  }
+
+  cancelSubmit(id) {
+    const index = this.newComment.indexOf(id);
+    this.newComment.splice(index, 1);
+    this.commentForm.reset();
+    this.enableCommentForm();
+    this.processing = false;
   }
 
   onBlogSubmit() {
     this.processing = true;
     this.disableNewBlogForm();
-    
+
     var blog = {
       title: this.form.get('title').value,
       body: this.form.get('body').value,
@@ -127,8 +159,35 @@ export class BlogComponent implements OnInit {
     })
   }
 
+  postComment(id) {
+    this.disableCommentForm(); // Disable form while saving comment to database
+    this.processing = true; // Lock buttons while saving comment to database
+    const comment = this.commentForm.get('comment').value; // Get the comment value to pass to service function
+    // Function to save the comment to the database
+    this.blogService.postComment(id, comment).subscribe(data => {
+      this.getAllBlogs(); // Refresh all blogs to reflect the new comment
+      const index = this.newComment.indexOf(id); // Get the index of the blog id to remove from array
+      this.newComment.splice(index, 1); // Remove id from the array
+      this.enableCommentForm(); // Re-enable the form
+      this.commentForm.reset(); // Reset the comment form
+      this.processing = false; // Unlock buttons on comment form
+      if (this.enabledComments.indexOf(id) < 0) {
+        this.expand(id);
+      }
+    })
+  }
+
+  expand(id) {
+    this.enabledComments.push(id);
+  }
+
+  collapse(id) {
+    const index = this.enabledComments.indexOf(id);
+    this.enabledComments.splice(index, 1);
+  }
+
   ngOnInit() {
-    if(this.authService.loggedIn()) {
+    if (this.authService.loggedIn()) {
       this.authService.getProfile().subscribe((profile) => {
         this.username = profile.user.username;
       })

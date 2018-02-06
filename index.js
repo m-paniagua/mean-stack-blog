@@ -8,6 +8,7 @@ var authentication = require('./routes/authentication')(router);
 var blogs = require('./routes/blog')(router);
 var bodyParser = require('body-parser');
 var cors = require('cors');
+var port = process.env.PORT || 8080; 
 
 // database connection
 mongoose.Promise = global.Promise;
@@ -32,17 +33,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // make angular prod build available
-app.use(express.static(__dirname + '/client/dist/'));
+app.use(express.static(__dirname + '/public'));
 
 app.use('/authentication', authentication);
 app.use('/blogs', blogs);
 
 // redirect to angular index file
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/dist/index.html'));
+    res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 // start server
-app.listen(8080, () => {
+app.listen(port, () => {
     console.log('Listening on port 8080');
 });
