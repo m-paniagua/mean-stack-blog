@@ -3,7 +3,7 @@ const crypto = require('crypto').randomBytes(256).toString('hex');
 // use environment variable for mlab url
 var dotenv = require('dotenv');
 dotenv.config();
-var url = process.env.MONGOLAB_URI;
+var url = process.env.PROD_MONGODB || process.env.MONGOLAB_URI;
 
 module.exports = {
     uri: url + '/mean-blog',
